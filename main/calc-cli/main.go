@@ -1,15 +1,30 @@
 package main
 
 import (
+	"flag"
+	handler2 "github.com/jcrob2/calc-apps/handlers"
 	"github.com/jcrob2/calc-lib/calc"
-	handler2 "github.com/jcrob2/calc-lib/calc_handler"
 	"log"
 	"os"
 )
 
 func main() {
 
-	var calculator calc.Calculator = calc.Addition{}
+	opFlag := flag.String("op", "+", "Sets which calculator we want to use")
+	flag.Parse()
+
+	var calculator calc.Calculator
+
+	switch *opFlag {
+	case "+":
+		calculator = calc.Addition{}
+	case "-":
+		calculator = calc.Subtraction{}
+	case "*":
+		calculator = calc.Multiplication{}
+	case "/":
+		calculator = calc.Division{}
+	}
 
 	o := os.Stdout
 	i := os.Args

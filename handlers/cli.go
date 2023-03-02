@@ -1,6 +1,5 @@
-package calc_handler
+package handlers
 
-import "C"
 import (
 	"errors"
 	"fmt"
@@ -23,18 +22,20 @@ type Bridge struct {
 }
 
 func (br Bridge) Handle(r []string) error {
-	a, err := strconv.Atoi(r[1])
+	a, err := strconv.Atoi(r[3])
 	if err != nil {
 		return fmt.Errorf("%w:%s", invalidArgumentError, err.Error())
 	}
 
-	b, err := strconv.Atoi(r[2])
+	b, err := strconv.Atoi(r[4])
 	if err != nil {
 		return fmt.Errorf("%w:%s", invalidArgumentError, err.Error())
 	}
+
+	opFlag := r[2]
 
 	result := br.C.Calculate(a, b)
-	_, err = fmt.Fprintf(br.W, "%d + %d = %d", a, b, result)
+	_, err = fmt.Fprintf(br.W, "%d %s %d = %d", a, opFlag, b, result)
 	if err != nil {
 		return err
 	}

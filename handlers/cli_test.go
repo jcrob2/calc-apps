@@ -1,4 +1,4 @@
-package calc_handler
+package handlers
 
 import (
 	"errors"
