@@ -22,20 +22,18 @@ type Bridge struct {
 }
 
 func (br Bridge) Handle(r []string) error {
-	a, err := strconv.Atoi(r[3])
+	a, err := strconv.Atoi(r[0])
 	if err != nil {
 		return fmt.Errorf("%w:%s", invalidArgumentError, err.Error())
 	}
 
-	b, err := strconv.Atoi(r[4])
+	b, err := strconv.Atoi(r[1])
 	if err != nil {
 		return fmt.Errorf("%w:%s", invalidArgumentError, err.Error())
 	}
-
-	opFlag := r[2]
 
 	result := br.C.Calculate(a, b)
-	_, err = fmt.Fprintf(br.W, "%d %s %d = %d", a, opFlag, b, result)
+	_, err = fmt.Fprintf(br.W, "%d %s %d = %d", a, "+", b, result)
 	if err != nil {
 		return err
 	}

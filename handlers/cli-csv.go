@@ -1,11 +1,10 @@
 package handlers
 
 import (
-	"fmt"
+	"encoding/csv"
 	"github.com/jcrob2/calc-lib/calc"
 	"io"
 	"strconv"
-	"strings"
 )
 
 type Equation struct {
@@ -16,72 +15,60 @@ type Equation struct {
 
 func EquationConstructor(a, b int, op string) Equation { return Equation{A: a, B: b, Op: op} }
 
-type Equations struct {
-	Eqns []Equation
-}
-
-func EquationsConstructor(s []Equation) Equations { return Equations{Eqns: s} }
-
 type CsvHandler struct {
-	W io.Writer
+	R *csv.Reader
+	W *csv.Writer
 	C calc.Calculator
 }
 
-func CsvHandlerConstructor(w io.Writer, c calc.Calculator) CsvHandler {
-	return CsvHandler{W: w, C: c}
+func CsvHandlerConstructor(r io.Reader, w io.Writer, c calc.Calculator) CsvHandler {
+	return CsvHandler{R: csv.NewReader(r), W: csv.NewWriter(w), C: c}
 }
 
-func (ch CsvHandler) Handle(r []string) error {
-	equations, err := ch.parseCsv(r)
-	if err != nil {
+func (ch CsvHandler) Handle(r io.Reader) error {
+	defer ch.W.Flush()
+	var err error
 
-	}
+	for {
+		record, err := ch.R.Read()
+		if err == io.EOF {
+			break
+		}
+		arg1, err := strconv.Atoi(record[0])
+		if err != nil {
+			continue
+		}
+		arg2, err := strconv.Atoi(record[2])
+		if err != nil {
+			continue
+		}
+		op := record[1]
 
-	for _, x := range equations.Eqns {
-		switch x.Op {
+		var calculator calc.Calculator
+
+		addCalc := calc.Addition{}
+		subCalc := calc.Subtraction{}
+		multCalc := calc.Multiplication{}
+		divCalc := calc.Division{}
+
+		switch op {
 		case "+":
-			ch.C = calc.Addition{}
+			calculator = addCalc
 		case "-":
-			ch.C = calc.Subtraction{}
+			calculator = subCalc
 		case "*":
-			ch.C = calc.Multiplication{}
+			calculator = multCalc
 		case "/":
-			ch.C = calc.Division{}
+			calculator = divCalc
 		default:
 			continue
 		}
 
-		result := ch.C.Calculate(x.A, x.B)
-		_, err = fmt.Fprintf(ch.W, "%d,%s,%d,%d\n", x.A, x.Op, x.B, result)
+		result := calculator.Calculate(arg1, arg2)
 
+		record = append(record, strconv.Itoa(result))
+
+		ch.W.Write(record)
 	}
-	return nil
-}
-
-func (ch CsvHandler) parseCsv(r []string) (Equations, error) {
-	var equations []Equation
-
-	temp := strings.Split(r[1], "\n")
-
-	for _, nl := range temp {
-		parse := strings.Split(nl, ",")
-
-		a, err := strconv.Atoi(parse[0])
-		if err != nil {
-			continue
-		}
-
-		op := parse[1]
-
-		b, err := strconv.Atoi(parse[2])
-		if err != nil {
-			continue
-		}
-
-		equation := EquationConstructor(a, b, op)
-		equations = append(equations, equation)
-	}
-
-	eqns := EquationsConstructor(equations)
-	return eqns, nil
+	return err
 }

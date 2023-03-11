@@ -4,16 +4,20 @@ import (
 	"github.com/jcrob2/calc-apps/handlers"
 	"github.com/jcrob2/calc-lib/calc"
 	"os"
+	"strings"
 )
 
 func main() {
 	var calculator calc.Calculator
-	o := os.Stdout
-	i := os.Args
+	in := os.Args[1]
 
-	var csvh handlers.CsvHandler = handlers.CsvHandlerConstructor(o, calculator)
+	//TODO: this is the only way I got this to actually read form the args. There has to be a more generic solution
+	i := strings.NewReader(in)
 
-	err := csvh.Handle(i)
+	csvh := handlers.CsvHandlerConstructor(i, os.Stdout, calculator)
+
+	println("\nOutput")
+	err := csvh.Handle(os.Stdin)
 
 	if err != nil {
 
