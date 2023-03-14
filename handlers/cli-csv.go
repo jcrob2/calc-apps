@@ -29,6 +29,13 @@ func (ch CsvHandler) Handle() error {
 	defer ch.W.Flush()
 	var err error
 
+	var calculator calc.Calculator
+
+	addCalc := calc.Addition{}
+	subCalc := calc.Subtraction{}
+	multCalc := calc.Multiplication{}
+	divCalc := calc.Division{}
+
 	for {
 		record, err := ch.R.Read()
 		if err == io.EOF {
@@ -42,15 +49,8 @@ func (ch CsvHandler) Handle() error {
 		if err != nil {
 			continue
 		}
+
 		op := record[1]
-
-		var calculator calc.Calculator
-
-		addCalc := calc.Addition{}
-		subCalc := calc.Subtraction{}
-		multCalc := calc.Multiplication{}
-		divCalc := calc.Division{}
-
 		switch op {
 		case "+":
 			calculator = addCalc
@@ -67,7 +67,6 @@ func (ch CsvHandler) Handle() error {
 		result := calculator.Calculate(arg1, arg2)
 
 		record = append(record, strconv.Itoa(result))
-
 		ch.W.Write(record)
 	}
 	return err
