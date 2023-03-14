@@ -25,7 +25,7 @@ func CsvHandlerConstructor(r io.Reader, w io.Writer, c calc.Calculator) CsvHandl
 	return CsvHandler{R: csv.NewReader(r), W: csv.NewWriter(w), C: c}
 }
 
-func (ch CsvHandler) Handle(r io.Reader) error {
+func (ch CsvHandler) Handle() error {
 	defer ch.W.Flush()
 	var err error
 
