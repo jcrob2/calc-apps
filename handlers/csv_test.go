@@ -2,6 +2,7 @@ package handlers
 
 import (
 	"bytes"
+	"errors"
 	"github.com/jcrob2/calc-lib/calc"
 	"strings"
 	"testing"
@@ -72,7 +73,17 @@ func TestInvalidOp(t *testing.T) {
 }
 
 func TestWriteErr(t *testing.T) {
+	input := "1,+,2"
+	calculator := FakeCalculator{}
+	writerErr := errors.New("writer error")
+	out := CustomWriter{err: writerErr}
+	handler := CsvHandlerConstructor(strings.NewReader(input), &out, calculator)
 
+	err := handler.Handle()
+
+	if out.err != writerErr {
+		t.Error("Unexpected Error:", err)
+	}
 }
 
 func TestReadErr(t *testing.T) {
@@ -84,7 +95,16 @@ type CustomWriter struct {
 	err    error
 }
 
+type CustomCalculator struct {
+	num1 int
+	num2 int
+}
+
 func (this CustomWriter) Write(p []byte) (int, error) {
 	this.output = p
 	return len(p), this.err
+}
+
+func (this CustomCalculator) Calculate(a, b int) int {
+	return 42
 }

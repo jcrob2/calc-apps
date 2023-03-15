@@ -66,7 +66,6 @@ func TestWriteError(t *testing.T) {
 	if err != writerErr {
 		t.Error("Unexpected Error:", err)
 	}
-
 }
 
 type FakeCalculator struct {

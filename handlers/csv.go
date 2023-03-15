@@ -27,7 +27,7 @@ func CsvHandlerConstructor(r io.Reader, w io.Writer, c calc.Calculator) CsvHandl
 
 func (ch CsvHandler) Handle() error {
 	defer ch.W.Flush()
-	var err error
+	var error error
 
 	var calculator calc.Calculator
 
@@ -43,10 +43,12 @@ func (ch CsvHandler) Handle() error {
 		}
 		arg1, err := strconv.Atoi(record[0])
 		if err != nil {
+			error = err
 			continue
 		}
 		arg2, err := strconv.Atoi(record[2])
 		if err != nil {
+			error = err
 			continue
 		}
 
@@ -69,5 +71,5 @@ func (ch CsvHandler) Handle() error {
 		record = append(record, strconv.Itoa(result))
 		ch.W.Write(record)
 	}
-	return err
+	return error
 }
