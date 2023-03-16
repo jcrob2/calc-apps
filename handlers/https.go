@@ -11,10 +11,6 @@ type HttpsHandler struct {
 	Calculator calc.Calculator
 }
 
-func HttpsHandlerConstructor(c calc.Calculator) HttpsHandler {
-	return HttpsHandler{Calculator: c}
-}
-
 func (this HttpsHandler) ServeHTTP(res http.ResponseWriter, req *http.Request) {
 	a, err := strconv.Atoi(req.URL.Query().Get("a"))
 	if err != nil {

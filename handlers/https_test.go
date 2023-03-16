@@ -13,8 +13,12 @@ func TestValid(t *testing.T) {
 	response := httptest.NewRecorder()
 	handler := SetupRouter()
 	handler.ServeHTTP(response, request)
+	buffer := response.Body.String()
 	code := response.Code
 
+	if buffer != "Result: 4" {
+		t.Errorf("Unexpected result. Got %s, expected 4", buffer)
+	}
 	if code != 200 {
 		t.Errorf("Unexpected status code. Expected 200, got %d", code)
 	}
@@ -60,4 +64,5 @@ func TestBadOp(t *testing.T) {
 	if code != 404 {
 		t.Errorf("Unexpected status code. Expected 404, got %d", code)
 	}
+
 }
