@@ -12,5 +12,4 @@ func main() {
 
 	println("starting server...")
 	http.ListenAndServe("localhost:8080", router)
-
 }
