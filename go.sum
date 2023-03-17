@@ -1,2 +1,6 @@
 github.com/jcrob2/calc-lib v0.2.0 h1:t57N+L1NDWUjXgypnuV9O/BtsGyHR8WBvMl1IPEodic=
 github.com/jcrob2/calc-lib v0.2.0/go.mod h1:nxQRMTuViuerLJ7KVBA86wo/33vwDMQkuW3Y2NUM+MA=
+github.com/smartystreets/assertions v1.13.0 h1:Dx1kYM01xsSqKPno3aqLnrwac2LetPvN23diwyr69Qs=
+github.com/smartystreets/assertions v1.13.0/go.mod h1:wDmR7qL282YbGsPy6H/yAsesrxfxaaSlJazyFLYVFx8=
+github.com/smartystreets/gunit v1.4.4 h1:oEKHO/Vn8VUO8KjEkoruZaZ3tcv2H8k66a3fgPcmoJg=
+github.com/smartystreets/gunit v1.4.4/go.mod h1:ciyZ4dVTN2S8npQ4g9lMdARLX5XboUpcq5O7N6GlQmw=
